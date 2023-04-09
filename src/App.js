@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-export default function Game () {
+export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0)
     const xIsNext = currentMove % 2 === 0
@@ -25,15 +25,19 @@ export default function Game () {
         }
         return (
             <li key={move}>
-                <button onClick={() => jumpTo(move)}>{description}</button>
+                {
+                    currentMove === move
+                        ? description
+                        : <button onClick={() => jumpTo(move)}>{description}</button>
+                }
             </li>
         )
     })
 
-    return(
+    return (
         <div className="game">
             <div className="game-board">
-                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
             </div>
             <div className="game-info">
                 <ol>{moves}</ol>
@@ -42,8 +46,9 @@ export default function Game () {
     )
 }
 
-function Board({ xIsNext, squares, onPlay }) {
+function Board({xIsNext, squares, onPlay}) {
     let xORo = xIsNext ? "X" : "O"
+
     function handleClick(i) {
         if (squares[i] || calculateWinner(squares)) return
         const nextSquares = squares.slice()
