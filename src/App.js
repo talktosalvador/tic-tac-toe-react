@@ -3,6 +3,7 @@ import {useState} from "react";
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0)
+    const [ascending, setAscending] = useState(true)
     const xIsNext = currentMove % 2 === 0
     const currentSquares = history[currentMove];
 
@@ -38,13 +39,24 @@ export default function Game() {
         )
     })
 
+    const order = ascending ? "Descending" : "Ascending"
+
+    const orderedMovements = ascending ? <ul>{moves}</ul> : <ul>{moves.reverse()}</ul>
+
     return (
         <div className="game">
             <div className="game-board">
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
             </div>
             <div className="game-info">
-                <ol>{moves}</ol>
+                <button onClick={
+                    () => {
+                        setAscending(!ascending)
+                    }
+                }>
+                    {order} order
+                </button>
+                {orderedMovements}
             </div>
         </div>
     )
@@ -78,7 +90,8 @@ function Board({xIsNext, squares, onPlay}) {
                         j => {
                             let noHardcode = j + i * 3
                             return (
-                                <Square value={squares[noHardcode]} onSquareClick={() => handleClick(noHardcode)} key={noHardcode}/>
+                                <Square value={squares[noHardcode]} onSquareClick={() => handleClick(noHardcode)}
+                                        key={noHardcode}/>
                             )
                         }
                     )
