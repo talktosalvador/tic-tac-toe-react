@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
@@ -46,7 +46,7 @@ export default function Game() {
     return (
         <div className="game">
             <div className="game-board">
-                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
+                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} currentMove={currentMove}/>
             </div>
             <div className="game-info">
                 <button onClick={
@@ -62,7 +62,8 @@ export default function Game() {
     )
 }
 
-function Board({xIsNext, squares, onPlay}) {
+function Board({xIsNext, squares, onPlay, currentMove}) {
+
     let xORo = xIsNext ? "X" : "O"
 
     function handleClick(i) {
@@ -73,11 +74,17 @@ function Board({xIsNext, squares, onPlay}) {
     }
 
     const winner = calculateWinner(squares)
+        ? squares[calculateWinner(squares)[0]]
+        : calculateWinner(squares)
+
     let status
+
     if (winner) {
         status = "Winner: " + winner
     } else {
-        status = `Next player: ${xORo}`
+        status = currentMove < 9
+            ? `Next player: ${xORo}`
+            : "DRAW"
     }
 
     const arr = [0, 1, 2]
@@ -88,10 +95,13 @@ function Board({xIsNext, squares, onPlay}) {
                 {
                     arr.map(
                         j => {
-                            let noHardcode = j + i * 3
+                            const noHardcode = j + i * 3
+                            const winnerSquare = winner ? calculateWinner(squares).includes(noHardcode) : false
+                            const className = winnerSquare ? "square winner" : "square"
                             return (
-                                <Square value={squares[noHardcode]} onSquareClick={() => handleClick(noHardcode)}
-                                        key={noHardcode}/>
+                                <Square value={squares[noHardcode]} onSquareClick={
+                                    () => handleClick(noHardcode)
+                                } className={className} key={noHardcode}/>
                             )
                         }
                     )
@@ -108,9 +118,9 @@ function Board({xIsNext, squares, onPlay}) {
     )
 }
 
-function Square({value, onSquareClick}) {
+function Square({value, onSquareClick, className}) {
     return (
-        <button className="square" onClick={onSquareClick}>
+        <button className={className} onClick={onSquareClick}>
             {value}
         </button>
     )
@@ -130,7 +140,7 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i]
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a]
+            return lines[i]
         }
     }
     return null
