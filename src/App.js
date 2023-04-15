@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
@@ -66,10 +66,13 @@ function Board({xIsNext, squares, onPlay, currentMove}) {
 
     let xORo = xIsNext ? "X" : "O"
 
-    function handleClick(i) {
+    const [position, setPosition] = useState("")
+
+    function handleClick(i, row, col) {
         if (squares[i] || calculateWinner(squares)) return
         const nextSquares = squares.slice()
         nextSquares[i] = xORo
+        setPosition(`${xORo} at row: ${row + 1}, col: ${col + 1}`)
         onPlay(nextSquares);
     }
 
@@ -78,6 +81,7 @@ function Board({xIsNext, squares, onPlay, currentMove}) {
         : calculateWinner(squares)
 
     let status
+
 
     if (winner) {
         status = "Winner: " + winner
@@ -100,7 +104,7 @@ function Board({xIsNext, squares, onPlay, currentMove}) {
                             const className = winnerSquare ? "square winner" : "square"
                             return (
                                 <Square value={squares[noHardcode]} onSquareClick={
-                                    () => handleClick(noHardcode)
+                                    () => handleClick(noHardcode, i, j)
                                 } className={className} key={noHardcode}/>
                             )
                         }
@@ -114,6 +118,7 @@ function Board({xIsNext, squares, onPlay, currentMove}) {
         <>
             <div className="status">{status}</div>
             {rowsSquares}
+            <div className="status">{position}</div>
         </>
     )
 }
