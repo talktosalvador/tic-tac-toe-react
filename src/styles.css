@@ -82,7 +82,7 @@ body {
 
 .board-row:after {
   clear: both;
-  content: '';
+  content: "";
   display: table;
 }
 
@@ -96,4 +96,18 @@ body {
 
 .game-info {
   margin-left: 20px;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-col p {
+  margin: 8px 12px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }

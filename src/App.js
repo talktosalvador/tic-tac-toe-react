@@ -122,7 +122,22 @@ function Board({ xIsNext, squares, onPlay, currentMove }) {
   return (
     <>
       <div className="status">{status}</div>
-      {rowsSquares}
+      <div className="flex-row">
+        <div className="flex-col">
+          <p>r/c</p>
+          <p>0</p>
+          <p>1</p>
+          <p>2</p>
+        </div>
+        <div className="flex-col">
+          <div className="flex-row">
+            <p>0</p>
+            <p>1</p>
+            <p>2</p>
+          </div>
+          {rowsSquares}
+        </div>
+      </div>
     </>
   );
 }
